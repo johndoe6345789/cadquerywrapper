@@ -1,0 +1,30 @@
+# Generated for the reposplit micro-repo layout.
+# Steps are emitted only for tooling this repo actually contains.
+name: ci
+
+on:
+  push:
+    branches: [codex/add-examples-using-cadquerywrapper-library]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: Python
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install requirements.txt
+        run: pip install -r requirements.txt
+      - name: Byte-compile all sources
+        run: python -m compileall -q .
